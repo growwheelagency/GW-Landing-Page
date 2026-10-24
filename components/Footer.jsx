@@ -37,9 +37,7 @@ export default function Footer() {
           </div>
         </div>
         <div className="bot">
-          <span>
-            © {new Date().getFullYear()} {site.name}. All rights reserved.
-          </span>
+          <span>© 2026 {site.name}. All rights reserved.</span>
           <a href="#top">Back to top ↑</a>
         </div>
       </div>
