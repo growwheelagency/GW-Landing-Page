@@ -2,6 +2,7 @@ import Reveal from "./Reveal";
 import Sparkles from "./Sparkles";
 import FounderCard from "./FounderCard";
 import { site } from "../lib/site";
+import Eyebrow from "./Eyebrow";
 
 export default function Founders() {
   return (
@@ -9,10 +10,7 @@ export default function Founders() {
       <div className="sec">
         <Reveal className="hd-c">
           <Sparkles />
-          <span className="lab">
-            <i />
-            Meet the founders
-          </span>
+          <Eyebrow>Meet the founders</Eyebrow>
           <h2 className="sh" id="fh">
             Three founders.
             <br />

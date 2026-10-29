@@ -3,6 +3,7 @@ import { useEffect, useRef, useState } from "react";
 import Reveal from "./Reveal";
 import Sparkles from "./Sparkles";
 import { Sparkle } from "./Icons";
+import Eyebrow from "./Eyebrow";
 
 const N = [
   { t: "SEO", sx: 9, sy: 24, sr: -9, cx: 12, cy: 50, mx: 50, my: 12, dd: 0, dl: 0 },
@@ -38,7 +39,7 @@ export default function Problem() {
       <div className="sec">
         <Reveal className="hd-c">
           <Sparkles />
-          <span className="lab"><i />The usual story</span>
+          <Eyebrow>The usual story</Eyebrow>
           <h2 className="sh" id="prh">Five freelancers. Five plans.<br /><b>One wasted budget.</b></h2>
           <p className="ss">Most small brands buy SEO from one person, ads from another and a website from a third. Nobody owns the whole picture, so every part works alone.</p>
         </Reveal>

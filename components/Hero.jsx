@@ -176,7 +176,7 @@ export default function Hero() {
           </div>
         ))}
 
-        <div className="eyebrow rise" style={{ "--d": ".15s" }}>
+        <div className="eyebrow fr rise" style={{ "--d": ".15s" }}>
           <span className="avs" aria-hidden="true">
             {site.team.map((m, i) => (
               <Avatar key={i} photo={m.photo} name={m.name} />

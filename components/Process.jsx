@@ -1,5 +1,6 @@
 import Reveal from "./Reveal";
 import Sparkles from "./Sparkles";
+import Eyebrow from "./Eyebrow";
 
 const steps = [
   { t: "Free audit", p: "We look at your site, ads and search presence and tell you plainly what's working and what isn't.", g: "A plain-English teardown in 48 hours" },
@@ -14,7 +15,7 @@ export default function Process() {
       <div className="sec">
         <Reveal className="hd-c">
           <Sparkles />
-          <span className="lab"><i />How we work</span>
+          <Eyebrow>How we work</Eyebrow>
           <h2 className="sh" id="hwh">No mystery.<br /><b>Four clear steps.</b></h2>
           <p className="ss">You'll always know what we're doing, why we're doing it and what it will cost before we start.</p>
         </Reveal>

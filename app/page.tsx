@@ -4,7 +4,7 @@ import Strip from "../components/Strip";
 import Promises from "../components/Promises";
 import Problem from "../components/Problem";
 import System from "../components/System";
-import Services from "../components/Services";
+import Shop from "../components/Shop";
 import Process from "../components/Process";
 import Founders from "../components/Founders";
 import Faq from "../components/Faq";
@@ -21,9 +21,9 @@ export default function Page() {
         <Promises />
         <Problem />
         <System />
-        <Services />
         <Process />
         <Founders />
+        <Shop />
         <Faq />
         <Contact />
       </main>

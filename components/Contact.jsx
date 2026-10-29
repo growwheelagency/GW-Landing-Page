@@ -3,6 +3,9 @@ import { useState } from "react";
 import Reveal from "./Reveal";
 import { Tick } from "./Icons";
 import { site } from "../lib/site";
+import { useBucket } from "../lib/bucket";
+import { pieces, totals, inr } from "../lib/shop";
+import Eyebrow from "./Eyebrow";
 
 const needs = [
   "SEO",
@@ -14,11 +17,13 @@ const needs = [
 ];
 
 export default function Contact() {
-  const [picked, setPicked] = useState([]);
+  const [needsPicked, setNeedsPicked] = useState([]);
   const [state, setState] = useState("idle"); // idle | sending | done | error
   const [err, setErr] = useState("");
+  const picked = useBucket();
+  const tot = totals(picked);
   const toggle = (n) =>
-    setPicked((p) => (p.includes(n) ? p.filter((x) => x !== n) : [...p, n]));
+    setNeedsPicked((p) => (p.includes(n) ? p.filter((x) => x !== n) : [...p, n]));
 
   async function submit(e) {
     e.preventDefault();
@@ -34,7 +39,12 @@ export default function Contact() {
           email: f.get("email"),
           website: f.get("website"),
           message: f.get("message"),
-          needs: picked,
+          needs: needsPicked,
+          bucket: picked.map((id) => {
+            const p = pieces[id];
+            return { service: p.svc.t, item: p.name, price: p.price, billing: p.b };
+          }),
+          totals: tot,
         }),
       });
       const j = await res.json();
@@ -51,10 +61,7 @@ export default function Contact() {
       <div className="sec">
         <div className="ct">
           <Reveal>
-            <span className="lab">
-              <i />
-              Free audit
-            </span>
+            <Eyebrow>Free audit</Eyebrow>
             <h2 className="sh" id="ch">
               Let's look at your
               <br />
@@ -98,6 +105,26 @@ export default function Contact() {
               </div>
             ) : (
               <form className="fm2" onSubmit={submit} noValidate={false}>
+                {picked.length > 0 && (
+                  <div className="bk-sum">
+                    <div className="bk-h">
+                      <span>
+                        Your bucket · {picked.length} piece
+                        {picked.length > 1 ? "s" : ""}
+                      </span>
+                      <a href="#services">Edit</a>
+                    </div>
+                    <ul>
+                      {picked.slice(0, 4).map((id) => (
+                        <li key={id}>{pieces[id].name}</li>
+                      ))}
+                      {picked.length > 4 && <li>+ {picked.length - 4} more</li>}
+                    </ul>
+                    <span className="bk-t">
+                      {inr(tot.mo)}/mo + {inr(tot.once)} one-time
+                    </span>
+                  </div>
+                )}
                 <label>
                   Your name
                   <input
@@ -132,7 +159,7 @@ export default function Contact() {
                       <button
                         type="button"
                         key={n}
-                        aria-pressed={picked.includes(n)}
+                        aria-pressed={needsPicked.includes(n)}
                         onClick={() => toggle(n)}
                       >
                         {n}
@@ -157,7 +184,7 @@ export default function Contact() {
                     "Sending…"
                   ) : (
                     <>
-                      Get my free audit{" "}
+                      {picked.length ? "Send my bucket" : "Get my free audit"}{" "}
                       <span className="arr" aria-hidden="true">
                         →
                       </span>

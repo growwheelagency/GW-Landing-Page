@@ -1,5 +1,6 @@
 import Reveal from "./Reveal";
 import { Plus } from "./Icons";
+import Eyebrow from "./Eyebrow";
 
 const faqs = [
   ["Are you a new agency?", "Yes. We're three founders who started GrowWheel recently, which is why you'll deal with us directly instead of an account manager. We'd rather say it plainly than dress this page in logos we haven't earned."],
@@ -17,7 +18,7 @@ export default function Faq() {
       <div className="sec">
         <div className="fq">
           <Reveal className="fq-l">
-            <span className="lab"><i />Questions</span>
+            <Eyebrow>Questions</Eyebrow>
             <h2 className="sh" id="fqh">Straight answers<br /><b>to what you'd ask.</b></h2>
             <p className="ss">Can't find yours? Send it over and a founder will reply within a day.</p>
             <a className="btn p" href="#contact" style={{ marginTop: 22 }}>Ask us anything <span className="arr" aria-hidden="true">→</span></a>

@@ -1,4 +1,5 @@
 import { site } from "../lib/site";
+import Logo from "./Logo";
 
 export default function Footer() {
   return (
@@ -7,10 +8,7 @@ export default function Footer() {
         <div className="cols">
           <div>
             <a className="logo lgw" href="#top">
-              <span className="lgt">
-                <b>Grow</b>
-                <span>Wheel</span>
-              </span>
+              <Logo />
             </a>
             <p className="tg2">{site.tagline}</p>
           </div>

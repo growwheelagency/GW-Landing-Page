@@ -1,6 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
 import { site } from "../lib/site";
+import Logo from "./Logo";
 
 const links = [
   ["Services", "#services"],
@@ -20,10 +21,7 @@ export default function Nav() {
   return (
     <header className={`nav${sc ? " sc" : ""}`}>
       <a className="logo" href="#top" aria-label={`${site.name} home`}>
-        <span className="lgt">
-          <b>Grow</b>
-          <span>Wheel</span>
-        </span>
+        <Logo />
       </a>
       <nav className="links" aria-label="Primary">
         {links.map(([t, h]) => (

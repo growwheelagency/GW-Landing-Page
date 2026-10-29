@@ -4,6 +4,8 @@ import Reveal from "./Reveal";
 import Sparkles from "./Sparkles";
 import { Tick } from "./Icons";
 import { spot } from "../lib/mag";
+import Eyebrow from "./Eyebrow";
+import DotPattern from "./DotPattern";
 
 function Count({ to }) {
   const ref = useRef(null);
@@ -62,10 +64,7 @@ export default function Promises() {
       <div className="sec">
         <Reveal className="hd-c">
           <Sparkles />
-          <span className="lab">
-            <i />
-            What you can hold us to
-          </span>
+          <Eyebrow>What you can hold us to</Eyebrow>
           <h2 className="sh" id="ph">
             Claims you can check
             <br />
@@ -80,6 +79,7 @@ export default function Promises() {
           {cards.map((c, i) => (
             <Reveal key={c.t} delay={0.05 + i * 0.1}>
               <article className="pc" {...spot}>
+                <DotPattern />
                 <div className="big">
                   <span className="num">
                     <Count to={c.n} />

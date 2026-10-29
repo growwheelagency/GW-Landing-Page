@@ -1,5 +1,7 @@
+import "lenis/dist/lenis.css";
 import "./globals.css";
 import { site } from "../lib/site";
+import SmoothScroll from "../components/SmoothScroll";
 
 export const metadata = {
   title: `${site.name} | ${site.tagline}`,
@@ -31,7 +33,10 @@ export default function RootLayout({ children }: any) {
           <style>{`.rv{opacity:1!important;transform:none!important}.rise{opacity:1!important;transform:none!important}`}</style>
         </noscript>
       </head>
-      <body>{children}</body>
+      <body>
+        <SmoothScroll />
+        {children}
+      </body>
     </html>
   );
 }

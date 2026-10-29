@@ -2,6 +2,7 @@
 import { useEffect, useRef, useState } from "react";
 import Reveal from "./Reveal";
 import Sparkles from "./Sparkles";
+import Eyebrow from "./Eyebrow";
 
 const steps = [
   { t: "Get found", s: "SEO · SEM · Local search", h: ["Be the name", "they see first."], p: "People already search for what you sell. We fix the words, the pages and the ads that put you in front of them.", tags: ["SEO", "SEM", "Local search"],
@@ -41,7 +42,7 @@ export default function System() {
       <div className="sec">
         <Reveal className="hd-c">
           <Sparkles />
-          <span className="lab"><i />Our system</span>
+          <Eyebrow>Our system</Eyebrow>
           <h2 className="sh" id="syh">One plan.<br /><b>Four moves.</b></h2>
           <p className="ss">Everything we offer sits inside one of these four steps, so nothing runs on its own and nothing gets paid for twice.</p>
         </Reveal>
