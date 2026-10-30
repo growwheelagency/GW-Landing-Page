@@ -1,3 +1,4 @@
+import type { ReactNode } from "react";
 import "lenis/dist/lenis.css";
 import "./globals.css";
 import { site } from "../lib/site";
@@ -15,7 +16,7 @@ export const viewport = {
   themeColor: "#F6F7F3",
 };
 
-export default function RootLayout({ children }: any) {
+export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html lang="en">
       <head>

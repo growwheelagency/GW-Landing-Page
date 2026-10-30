@@ -7,8 +7,8 @@ import { spot } from "../lib/mag";
 import Eyebrow from "./Eyebrow";
 import DotPattern from "./DotPattern";
 
-function Count({ to }) {
-  const ref = useRef(null);
+function Count({ to }: { to: number }) {
+  const ref = useRef<HTMLSpanElement>(null);
   useEffect(() => {
     const el = ref.current;
     if (!el || matchMedia("(prefers-reduced-motion:reduce)").matches) return;
@@ -17,11 +17,11 @@ function Count({ to }) {
       ([e]) => {
         if (!e.isIntersecting) return;
         io.disconnect();
-        let t0 = null;
-        const f = (t) => {
+        let t0: number | null = null;
+        const f = (t: number) => {
           if (!t0) t0 = t;
           const p = Math.min((t - t0) / 1100, 1);
-          el.textContent = Math.round(to * (1 - Math.pow(1 - p, 3)));
+          el.textContent = String(Math.round(to * (1 - Math.pow(1 - p, 3))));
           if (p < 1) requestAnimationFrame(f);
         };
         requestAnimationFrame(f);

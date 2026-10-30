@@ -1,5 +1,6 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
+import type { ReactNode } from "react";
 import Reveal from "./Reveal";
 import Sparkles from "./Sparkles";
 import { Sparkle } from "./Icons";
@@ -15,7 +16,7 @@ const N = [
 const Broken = () => (
   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" aria-hidden="true"><path d="M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1 1M14 10a4 4 0 0 0-5.7 0l-3 3a4 4 0 0 0 5.7 5.7l1-1" /><path d="M4 4l16 16" /></svg>
 );
-const pains = [
+const pains: [string, ReactNode][] = [
   ["SEO and ads", <>Your SEO ranks you for words your ads <b>never mention.</b></>],
   ["Ads and website", <>Your ads send people to a page <b>nobody designed for them.</b></>],
   ["Reports and sales", <>Your report looks great and <b>tells you nothing about sales.</b></>],
@@ -23,13 +24,13 @@ const pains = [
 
 export default function Problem() {
   const [joined, setJoined] = useState(false);
-  const stage = useRef(null), touched = useRef(false);
+  const stage = useRef<HTMLDivElement>(null), touched = useRef(false);
   useEffect(() => {
     if (matchMedia("(prefers-reduced-motion:reduce)").matches) { setJoined(true); return; }
     const io = new IntersectionObserver(([e]) => {
       if (e.isIntersecting) { io.disconnect(); setTimeout(() => { if (!touched.current) setJoined(true); }, 1400); }
     }, { threshold: 0.6 });
-    io.observe(stage.current);
+    io.observe(stage.current!);
     return () => io.disconnect();
   }, []);
   const toggle = () => { touched.current = true; setJoined((j) => !j); };

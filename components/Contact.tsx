@@ -1,5 +1,6 @@
 "use client";
 import { useState } from "react";
+import type { FormEvent } from "react";
 import Reveal from "./Reveal";
 import { Tick } from "./Icons";
 import { site } from "../lib/site";
@@ -8,7 +9,6 @@ import { pieces, totals, inr } from "../lib/shop";
 import Eyebrow from "./Eyebrow";
 
 const needs = [
-  "SEO",
   "Paid ads",
   "Social media",
   "Website",
@@ -17,15 +17,15 @@ const needs = [
 ];
 
 export default function Contact() {
-  const [needsPicked, setNeedsPicked] = useState([]);
-  const [state, setState] = useState("idle"); // idle | sending | done | error
+  const [needsPicked, setNeedsPicked] = useState<string[]>([]);
+  const [state, setState] = useState<"idle" | "sending" | "done" | "error">("idle");
   const [err, setErr] = useState("");
   const picked = useBucket();
   const tot = totals(picked);
-  const toggle = (n) =>
+  const toggle = (n: string) =>
     setNeedsPicked((p) => (p.includes(n) ? p.filter((x) => x !== n) : [...p, n]));
 
-  async function submit(e) {
+  async function submit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
     const f = new FormData(e.currentTarget);
     setState("sending");
@@ -37,6 +37,7 @@ export default function Contact() {
         body: JSON.stringify({
           name: f.get("name"),
           email: f.get("email"),
+          phone: f.get("phone"),
           website: f.get("website"),
           message: f.get("message"),
           needs: needsPicked,
@@ -51,7 +52,7 @@ export default function Contact() {
       if (!j.ok) throw new Error(j.error || "Something went wrong.");
       setState("done");
     } catch (x) {
-      setErr(x.message);
+      setErr(x instanceof Error ? x.message : "Something went wrong.");
       setState("error");
     }
   }
@@ -130,7 +131,7 @@ export default function Contact() {
                   <input
                     name="name"
                     required
-                    placeholder="e.g. Riya Sharma"
+                    placeholder="e.g. John Smith"
                     autoComplete="name"
                   />
                 </label>
@@ -142,6 +143,15 @@ export default function Contact() {
                     required
                     placeholder="you@company.com"
                     autoComplete="email"
+                  />
+                </label>
+                <label>
+                  Phone or WhatsApp (optional)
+                  <input
+                    name="phone"
+                    type="tel"
+                    placeholder="+91 98765 43210"
+                    autoComplete="tel"
                   />
                 </label>
                 <label>
@@ -193,7 +203,9 @@ export default function Contact() {
                 </button>
                 {state === "error" && (
                   <p className="note err" role="alert">
-                    {err}
+                    {err} Please{" "}
+                    <a href={`https://wa.me/${site.whatsapp}`}>WhatsApp us</a>{" "}
+                    instead.
                   </p>
                 )}
                 <p className="note">

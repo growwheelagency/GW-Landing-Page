@@ -30,7 +30,7 @@ export default function Footer() {
             <h4>Contact</h4>
             <a href={`mailto:${site.email}`}>{site.email}</a>
             <a href={`https://wa.me/${site.whatsapp}`}>WhatsApp</a>
-            <span>{site.phone}</span>
+            <a href={`tel:${site.phone.replace(/\s/g, "")}`}>{site.phone}</a>
             <span>{site.location}</span>
           </div>
         </div>

@@ -1,17 +1,21 @@
+import type { PointerEvent } from "react";
+
+type E = PointerEvent<HTMLElement>;
+
 // Magnetic hover for buttons and tilt for cards (spread onto a JSX element).
 export const mag = {
-  onPointerMove(e) {
+  onPointerMove(e: E) {
     if (e.pointerType === "touch") return;
     const b = e.currentTarget,
       r = b.getBoundingClientRect();
     b.style.transform = `translate(${(e.clientX - r.left - r.width / 2) * 0.14}px,${(e.clientY - r.top - r.height / 2) * 0.28 - 2}px)`;
   },
-  onPointerLeave(e) {
+  onPointerLeave(e: E) {
     e.currentTarget.style.transform = "";
   },
 };
 export const tilt = {
-  onPointerMove(e) {
+  onPointerMove(e: E) {
     if (e.pointerType === "touch") return;
     const c = e.currentTarget,
       r = c.getBoundingClientRect();
@@ -24,13 +28,13 @@ export const tilt = {
       -((e.clientY - r.top) / r.height - 0.5) * 7 + "deg",
     );
   },
-  onPointerLeave(e) {
+  onPointerLeave(e: E) {
     e.currentTarget.style.setProperty("--ry", "0deg");
     e.currentTarget.style.setProperty("--rx", "0deg");
   },
 };
 export const spot = {
-  onPointerMove(e) {
+  onPointerMove(e: E) {
     const c = e.currentTarget,
       r = c.getBoundingClientRect();
     c.style.setProperty("--x", e.clientX - r.left + "px");

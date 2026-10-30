@@ -1803,10 +1803,8 @@ h1 {
   display: flex;
   align-items: center;
   width: max-content;
-  animation: mq 38s linear infinite;
-}
-.marq:hover .track {
-  animation-play-state: paused;
+  animation: mq 180s linear infinite;
+  will-change: transform;
 }
 @keyframes mq {
   to {
@@ -1818,7 +1816,7 @@ h1 {
   align-items: center;
   gap: 28px;
   padding-right: 28px;
-  font-size: clamp(20px, 2.5vw, 32px);
+  font-size: clamp(15px, 1.7vw, 22px);
   letter-spacing: -0.035em;
   font-weight: 300;
   color: var(--ink2);
@@ -1826,13 +1824,10 @@ h1 {
   cursor: default;
 }
 .it span {
-  transition:
-    color 0.2s,
-    font-weight 0.2s;
+  transition: color 0.2s;
 }
 .it:hover span {
   color: var(--action);
-  font-weight: 700;
 }
 .it svg {
   width: 14px;
@@ -2814,6 +2809,10 @@ details.q p {
   color: var(--err);
   font-weight: 600;
 }
+.fm2 .note.err a {
+  color: inherit;
+  text-decoration: underline;
+}
 .ok2 {
   text-align: center;
   padding: 48px 26px;
@@ -3494,6 +3493,8 @@ details.q p {
 /* ---------- selection frame on eyebrows ---------- */
 .fr {
   --fc: var(--action);
+  --hs: 7px;
+  --hi: -4px;
   position: relative;
   border-radius: 0;
   border: 1px solid color-mix(in srgb, var(--fc) 55%, transparent);
@@ -3501,13 +3502,13 @@ details.q p {
 .fr:after {
   content: "";
   position: absolute;
-  inset: -4px;
+  inset: var(--hi);
   pointer-events: none;
   background:
-    linear-gradient(var(--fc), var(--fc)) left top / 7px 7px no-repeat,
-    linear-gradient(var(--fc), var(--fc)) right top / 7px 7px no-repeat,
-    linear-gradient(var(--fc), var(--fc)) left bottom / 7px 7px no-repeat,
-    linear-gradient(var(--fc), var(--fc)) right bottom / 7px 7px no-repeat;
+    linear-gradient(var(--fc), var(--fc)) left top / var(--hs) var(--hs) no-repeat,
+    linear-gradient(var(--fc), var(--fc)) right top / var(--hs) var(--hs) no-repeat,
+    linear-gradient(var(--fc), var(--fc)) left bottom / var(--hs) var(--hs) no-repeat,
+    linear-gradient(var(--fc), var(--fc)) right bottom / var(--hs) var(--hs) no-repeat;
 }
 .lab.fr {
   padding: 7px 14px;
@@ -3577,5 +3578,42 @@ details.q p {
   .mk2 .ar2 {
     animation: none;
     transition: none;
+  }
+}
+
+/* eyebrows: compact on phones */
+@media (max-width: 640px) {
+  .lab.fr {
+    --hs: 5px;
+    --hi: -3px;
+    gap: 6px;
+    padding: 3px 9px;
+    font-size: 11px;
+    line-height: 1.25;
+  }
+  .lab.fr i {
+    width: 5px;
+    height: 5px;
+  }
+  .eyebrow {
+    gap: 6px;
+    padding: 3px 10px 3px 3px;
+    font-size: 10.5px;
+    line-height: 1.25;
+  }
+  .eyebrow .av {
+    width: 18px;
+    height: 18px;
+    border-width: 1.5px;
+  }
+  .eyebrow .av + .av {
+    margin-left: -6px;
+  }
+  .eyebrow .av svg {
+    width: 10px;
+    height: 10px;
+  }
+  .eyebrow .sep {
+    margin: 0 1px;
   }
 }

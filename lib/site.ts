@@ -1,3 +1,11 @@
+export type Member = {
+  name: string;
+  role: string;
+  photo: string | null;
+  owns: string;
+  tags: string[];
+};
+
 // Edit this file: everything on the page that is "yours" lives here.
 export const site = {
   name: "GrowWheel",
@@ -7,7 +15,7 @@ export const site = {
   whatsapp: "918287377830", // TODO: digits only, with country code
   location: "India",
   // Replace "photo" with a path like "/team/one.jpg" (put images in /public/team)
-  team: [
+  team: <Member[]>[
     {
       name: "Founder name",
       role: "Strategy & SEO",

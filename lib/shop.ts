@@ -1,12 +1,28 @@
 // Lead shop: every service, the pieces inside it and their starting prices (INR).
 // b: "mo" = billed monthly, "once" = one-time. Edit prices here only.
-export const groups = {
+export type GroupId = "social" | "reach" | "web";
+export type Billing = "mo" | "once";
+export type Service = {
+  id: string;
+  g: GroupId;
+  t: string;
+  items: [name: string, price: number, b: Billing][];
+};
+export type Piece = {
+  id: string;
+  svc: Service;
+  name: string;
+  price: number;
+  b: Billing;
+};
+
+export const groups: Record<GroupId, string> = {
   social: "Social",
   reach: "Ads & outreach",
   web: "Web",
 };
 
-export const services = [
+export const services: Service[] = [
   {
     id: "igfb",
     g: "social",
@@ -147,16 +163,16 @@ export const services = [
 ];
 
 // Flat lookup: "igfb-0" -> { id, svc, name, price, b }
-export const pieces = {};
+export const pieces: Record<string, Piece> = {};
 services.forEach((s) =>
   s.items.forEach(([name, price, b], i) => {
     pieces[`${s.id}-${i}`] = { id: `${s.id}-${i}`, svc: s, name, price, b };
   }),
 );
-export const idsOf = (s) => s.items.map((_, i) => `${s.id}-${i}`);
+export const idsOf = (s: Service) => s.items.map((_, i) => `${s.id}-${i}`);
 
-export const inr = (n) => "₹" + Math.round(n).toLocaleString("en-IN");
-export function totals(ids) {
+export const inr = (n: number) => "₹" + Math.round(n).toLocaleString("en-IN");
+export function totals(ids: string[]) {
   let mo = 0,
     once = 0;
   ids.forEach((id) => {

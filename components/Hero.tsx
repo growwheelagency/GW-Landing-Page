@@ -8,29 +8,31 @@ import { Sparkle, Tick } from "./Icons";
 const WORDS = ["Turning", "Bold", "Ideas", "Into", "Digital", "Momentum."];
 const DEFAULT = [5, 5]; // "Momentum." starts selected, like the Figma
 
+type Timer = ReturnType<typeof setTimeout>;
+
 export default function Hero() {
-  const hero = useRef(null),
-    h = useRef(null),
-    sel = useRef(null),
-    tip = useRef(null);
-  const copy = useRef(null),
-    paste = useRef(null),
-    words = useRef([]);
+  const hero = useRef<HTMLElement>(null),
+    h = useRef<HTMLHeadingElement>(null),
+    sel = useRef<HTMLSpanElement>(null),
+    tip = useRef<HTMLSpanElement>(null);
+  const copy = useRef<HTMLButtonElement>(null),
+    paste = useRef<HTMLButtonElement>(null),
+    words = useRef<HTMLSpanElement[]>([]);
 
   useEffect(() => {
-    const H = h.current,
-      S = sel.current,
-      T = tip.current,
+    const H = h.current!,
+      S = sel.current!,
+      T = tip.current!,
       W = words.current;
+    const timers: Timer[] = [];
     let cur = [...DEFAULT],
-      ready = false,
-      timers = [];
+      ready = false;
 
-    function place(a, b, collapsed) {
+    function place(a: number, b: number, collapsed: boolean) {
       const hr = H.getBoundingClientRect(),
         f = W[a].getBoundingClientRect();
-      let left = f.left,
-        right = f.right;
+      const left = f.left;
+      let right = f.right;
       for (let i = a + 1; i <= b; i++) {
         const r = W[i].getBoundingClientRect();
         if (Math.abs(r.top - f.top) < 8) right = Math.max(right, r.right);
@@ -54,7 +56,7 @@ export default function Hero() {
         Math.max(18, Math.min(tw - 18, cx - tl)) + "px",
       );
     }
-    function setRange(a, b) {
+    function setRange(a: number, b: number) {
       cur = [a, b];
       W.forEach((w, i) => w.classList.toggle("on", i >= a && i <= b));
       place(a, b, false);
@@ -71,10 +73,10 @@ export default function Hero() {
         }
       };
       w.addEventListener("click", fn);
-      return [w, fn];
+      return [w, fn] as const;
     });
-    function flash(btn, label) {
-      const o = btn.dataset.o || btn.textContent;
+    function flash(btn: HTMLButtonElement & { _t?: Timer }, label: string) {
+      const o = btn.dataset.o || btn.textContent || "";
       btn.dataset.o = o;
       btn.textContent = label;
       clearTimeout(btn._t);
@@ -84,13 +86,13 @@ export default function Hero() {
       try {
         navigator.clipboard && navigator.clipboard.writeText(text());
       } catch {}
-      flash(copy.current, "Copied ✓");
+      flash(copy.current!, "Copied ✓");
     };
-    const onPaste = () => flash(paste.current, "Pasted ✓");
-    copy.current.addEventListener("click", onCopy);
-    paste.current.addEventListener("click", onPaste);
-    const onDoc = (e) => {
-      if (!H.contains(e.target)) T.classList.remove("show");
+    const onPaste = () => flash(paste.current!, "Pasted ✓");
+    copy.current!.addEventListener("click", onCopy);
+    paste.current!.addEventListener("click", onPaste);
+    const onDoc = (e: MouseEvent) => {
+      if (!H.contains(e.target as Node)) T.classList.remove("show");
     };
     document.addEventListener("click", onDoc);
 
@@ -113,18 +115,18 @@ export default function Hero() {
       : Promise.resolve()
     ).then(start);
 
-    let rt;
+    let rt: Timer | undefined;
     const onResize = () => {
       clearTimeout(rt);
       rt = setTimeout(() => ready && place(cur[0], cur[1], false), 80);
     };
     window.addEventListener("resize", onResize);
 
-    const el = hero.current;
-    const onMove = (e) => {
+    const el = hero.current!;
+    const onMove = (e: PointerEvent) => {
       const r = el.getBoundingClientRect();
-      el.style.setProperty("--mx", ((e.clientX - r.left) / r.width - 0.5) * 2);
-      el.style.setProperty("--my", ((e.clientY - r.top) / r.height - 0.5) * 2);
+      el.style.setProperty("--mx", String(((e.clientX - r.left) / r.width - 0.5) * 2));
+      el.style.setProperty("--my", String(((e.clientY - r.top) / r.height - 0.5) * 2));
     };
     el.addEventListener("pointermove", onMove);
 
@@ -176,15 +178,15 @@ export default function Hero() {
           </div>
         ))}
 
-        <div className="eyebrow fr rise" style={{ "--d": ".15s" }}>
+        <div className="eyebrow rise" style={{ "--d": ".15s" }}>
           <span className="avs" aria-hidden="true">
             {site.team.map((m, i) => (
               <Avatar key={i} photo={m.photo} name={m.name} />
             ))}
           </span>
           <span>
-            SEO <span className="sep">·</span> Paid Ads{" "}
-            <span className="sep">·</span> Web <span className="sep">—</span>{" "}
+            Paid Ads <span className="sep">·</span> Web{" "}
+            <span className="sep">—</span>{" "}
             <b>one team, zero handoffs.</b>
           </span>
         </div>
@@ -205,7 +207,9 @@ export default function Hero() {
           {WORDS.map((w, i) => (
             <span key={w}>
               <span
-                ref={(el) => (words.current[i] = el)}
+                ref={(el) => {
+                  if (el) words.current[i] = el;
+                }}
                 className={`w${i >= DEFAULT[0] && i <= DEFAULT[1] ? " on" : ""}`}
               >
                 {w}

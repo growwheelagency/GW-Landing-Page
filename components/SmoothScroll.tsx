@@ -9,7 +9,7 @@ export default function SmoothScroll() {
   useEffect(() => {
     if (matchMedia("(prefers-reduced-motion: reduce)").matches) return;
     const lenis = new Lenis({ autoRaf: false, lerp: 0.1, anchors: true });
-    const tick = (t) => lenis.raf(t * 1000);
+    const tick = (t: number) => lenis.raf(t * 1000);
     gsap.ticker.add(tick);
     gsap.ticker.lagSmoothing(0);
     return () => {

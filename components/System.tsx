@@ -1,5 +1,6 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
+import type { KeyboardEvent } from "react";
 import Reveal from "./Reveal";
 import Sparkles from "./Sparkles";
 import Eyebrow from "./Eyebrow";
@@ -17,11 +18,11 @@ const steps = [
 
 export default function System() {
   const [cur, setCur] = useState(0), [auto, setAuto] = useState(false), [hover, setHover] = useState(false);
-  const panel = useRef(null), tabs = useRef([]);
+  const panel = useRef<HTMLDivElement>(null), tabs = useRef<(HTMLButtonElement | null)[]>([]);
   useEffect(() => {
     if (matchMedia("(prefers-reduced-motion:reduce)").matches) return;
     const io = new IntersectionObserver(([e]) => { if (e.isIntersecting) { io.disconnect(); setAuto(true); } }, { threshold: 0.5 });
-    io.observe(panel.current);
+    io.observe(panel.current!);
     return () => io.disconnect();
   }, []);
   useEffect(() => {
@@ -29,9 +30,9 @@ export default function System() {
     const t = setTimeout(() => setCur((c) => (c + 1) % steps.length), 6000);
     return () => clearTimeout(t);
   }, [auto, hover, cur]);
-  const pick = (i) => { setAuto(false); setCur(i); };
-  const onKey = (e) => {
-    const k = e.key; let n = null;
+  const pick = (i: number) => { setAuto(false); setCur(i); };
+  const onKey = (e: KeyboardEvent<HTMLButtonElement>) => {
+    const k = e.key; let n: number | null = null;
     if (k === "ArrowDown" || k === "ArrowRight") n = (cur + 1) % steps.length;
     if (k === "ArrowUp" || k === "ArrowLeft") n = (cur + steps.length - 1) % steps.length;
     if (n !== null) { e.preventDefault(); pick(n); tabs.current[n]?.focus(); }
@@ -50,7 +51,7 @@ export default function System() {
           <div className="sl" role="tablist" aria-label="Our four steps" style={{ "--p": cur / (steps.length - 1) }}>
             <div className="sl-line" aria-hidden="true"><div className="sl-fill" /></div>
             {steps.map((s, i) => (
-              <button key={s.t} ref={(el) => (tabs.current[i] = el)} role="tab" id={`t${i}`} aria-controls={`p${i}`} aria-selected={cur === i} tabIndex={cur === i ? 0 : -1}
+              <button key={s.t} ref={(el) => { tabs.current[i] = el; }} role="tab" id={`t${i}`} aria-controls={`p${i}`} aria-selected={cur === i} tabIndex={cur === i ? 0 : -1}
                 className={`sy${i < cur ? " done" : ""}${cur === i && auto && !hover ? " auto" : ""}`} onClick={() => pick(i)} onKeyDown={onKey}>
                 <span className="n">0{i + 1}</span>
                 <span><b>{s.t}</b><small>{s.s}</small></span>

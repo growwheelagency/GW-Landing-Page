@@ -2,6 +2,7 @@
 // import { tilt } from "../../GW/gw/lib/mag";
 import { tilt } from "../lib/mag";
 import { Person } from "./Icons";
+import type { Member } from "../lib/site";
 
 const grads = [
   "linear-gradient(135deg,#8F8DF0,#4B49A0)",
@@ -9,7 +10,7 @@ const grads = [
   "linear-gradient(135deg,#5B59B8,#17163A)",
 ];
 
-export default function FounderCard({ m, i }) {
+export default function FounderCard({ m, i }: { m: Member; i: number }) {
   return (
     <article className="fc" {...tilt}>
       <div className="ph" style={{ "--g": grads[i % 3] }}>

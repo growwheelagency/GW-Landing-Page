@@ -1,9 +1,12 @@
 "use client";
 import { useEffect, useRef } from "react";
+import type { ElementType, HTMLAttributes } from "react";
+
+type RevealProps = HTMLAttributes<HTMLElement> & { as?: ElementType; delay?: number };
 
 // Fades children in when they scroll into view.
-export default function Reveal({ as: Tag = "div", delay = 0, className = "", style, children, ...rest }) {
-  const ref = useRef(null);
+export default function Reveal({ as: Tag = "div", delay = 0, className = "", style, children, ...rest }: RevealProps) {
+  const ref = useRef<HTMLElement>(null);
   useEffect(() => {
     const el = ref.current;
     if (!el) return;

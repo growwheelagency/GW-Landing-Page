@@ -8,6 +8,7 @@ import Reveal from "./Reveal";
 import Sparkles from "./Sparkles";
 import { Plus, Tick } from "./Icons";
 import { services, groups, pieces, idsOf, inr, totals } from "../lib/shop";
+import type { Service } from "../lib/shop";
 import { bucket, useBucket } from "../lib/bucket";
 import Eyebrow from "./Eyebrow";
 
@@ -28,7 +29,7 @@ const ORDER = [
   "seo",
 ];
 const ROT = [-3, 2, -1.5, 3, -2.5, 1.5, -2, 2.5, -1, 3, -2];
-const shelf = ORDER.map((id) => services.find((s) => s.id === id));
+const shelf = ORDER.map((id) => services.find((s) => s.id === id)!);
 const reduced = () => matchMedia("(prefers-reduced-motion: reduce)").matches;
 
 function Basket() {
@@ -52,22 +53,22 @@ function Basket() {
 
 export default function Shop() {
   const picked = useBucket();
-  const [open, setOpen] = useState(null);
-  const root = useRef(null),
-    shelfEl = useRef(null),
-    dw = useRef(null),
-    bk = useRef(null),
-    icon = useRef(null),
-    moEl = useRef(null),
-    onceEl = useRef(null);
-  const floats = useRef({}),
+  const [open, setOpen] = useState<string | null>(null);
+  const root = useRef<HTMLElement>(null),
+    shelfEl = useRef<HTMLDivElement>(null),
+    dw = useRef<HTMLDivElement>(null),
+    bk = useRef<HTMLDivElement>(null),
+    icon = useRef<HTMLSpanElement>(null),
+    moEl = useRef<HTMLSpanElement>(null),
+    onceEl = useRef<HTMLSpanElement>(null);
+  const floats = useRef<Record<string, gsap.core.Tween>>({}),
     dragged = useRef(false),
     fromH = useRef(0),
-    flip = useRef(null),
+    flip = useRef<Flip.FlipState | null>(null),
     shown = useRef({ mo: 0, once: 0 });
 
   // A dot flies from what was picked into the bucket icon.
-  function fly(el) {
+  function fly(el?: Element) {
     if (!el || !icon.current || reduced()) return;
     const a = el.getBoundingClientRect(),
       b = icon.current.getBoundingClientRect();
@@ -103,27 +104,27 @@ export default function Shop() {
   }
 
   // Every bucket change goes through here so the list can animate with Flip.
-  function commit(next) {
+  function commit(next: string[]) {
     if (bk.current && !reduced())
       flip.current = Flip.getState(
         bk.current.querySelectorAll("[data-flip-id]"),
       );
     bucket.set(next);
   }
-  function togglePiece(id, el) {
+  function togglePiece(id: string, el?: Element) {
     const cur = bucket.get();
     if (cur.includes(id)) return commit(cur.filter((x) => x !== id));
     commit([...cur, id]);
     fly(el);
   }
-  function addAll(s, el) {
+  function addAll(s: Service, el: Element) {
     const cur = bucket.get(),
       add = idsOf(s).filter((id) => !cur.includes(id));
     if (!add.length) return;
     commit([...cur, ...add]);
     fly(el);
   }
-  function removeAll(s) {
+  function removeAll(s: Service) {
     const ids = idsOf(s);
     commit(bucket.get().filter((x) => !ids.includes(x)));
   }
@@ -131,8 +132,10 @@ export default function Shop() {
   // Shelf: chips pop in, then float. Drag is mouse-only; touch users tap.
   useGSAP(
     () => {
-      const wraps = gsap.utils.toArray(".ls-w", shelfEl.current),
-        chips = gsap.utils.toArray(".ls-chip", shelfEl.current);
+      const b = bk.current!,
+        parentOf = (el: unknown) => (el as HTMLElement).parentNode as HTMLElement,
+        wraps = gsap.utils.toArray<HTMLElement>(".ls-w", shelfEl.current),
+        chips = gsap.utils.toArray<HTMLElement>(".ls-chip", shelfEl.current);
       chips.forEach((c, i) => gsap.set(c, { rotation: ROT[i] }));
 
       if (matchMedia("(pointer: fine)").matches) {
@@ -143,25 +146,22 @@ export default function Shop() {
           zIndexBoost: false,
           onDragStart() {
             dragged.current = true;
-            const w = this.target.parentNode;
+            const w = parentOf(this.target);
             w.classList.add("drag");
-            floats.current[w.dataset.id]?.pause();
-            bk.current.classList.add("ready");
+            floats.current[w.dataset.id!]?.pause();
+            b.classList.add("ready");
           },
           onDrag() {
-            bk.current.classList.toggle(
-              "over",
-              this.hitTest(bk.current, "30%"),
-            );
+            b.classList.toggle("over", this.hitTest(b, "30%"));
           },
           onDragEnd() {
-            const w = this.target.parentNode;
-            if (this.hitTest(bk.current, "30%"))
+            const w = parentOf(this.target);
+            if (this.hitTest(b, "30%"))
               addAll(
-                services.find((s) => s.id === w.dataset.id),
+                services.find((s) => s.id === w.dataset.id)!,
                 this.target,
               );
-            bk.current.classList.remove("ready", "over");
+            b.classList.remove("ready", "over");
             gsap.to(this.target, {
               x: 0,
               y: 0,
@@ -169,7 +169,7 @@ export default function Shop() {
               ease: "elastic.out(1, 0.65)",
               onComplete() {
                 w.classList.remove("drag");
-                floats.current[w.dataset.id]?.play();
+                floats.current[w.dataset.id!]?.play();
               },
             });
             setTimeout(() => (dragged.current = false), 60);
@@ -180,7 +180,7 @@ export default function Shop() {
       if (reduced()) return;
       gsap.set(wraps, { autoAlpha: 0, y: 30, scale: 0.8 });
       wraps.forEach((w, i) => {
-        floats.current[w.dataset.id] = gsap.to(w, {
+        floats.current[w.dataset.id!] = gsap.to(w, {
           y: i % 2 ? -7 : 7,
           duration: 2.4 + (i % 4) * 0.35,
           ease: "sine.inOut",
@@ -210,7 +210,7 @@ export default function Shop() {
         },
         { threshold: 0.2 },
       );
-      io.observe(shelfEl.current);
+      io.observe(shelfEl.current!);
       return () => io.disconnect();
     },
     { scope: root },
@@ -251,15 +251,15 @@ export default function Shop() {
     { dependencies: [open], scope: root },
   );
 
-  function pick(id) {
+  function pick(id: string) {
     if (dragged.current) return; // the click that ends a drag
     if (open === id) return close();
     gsap.killTweensOf(dw.current);
-    fromH.current = dw.current.offsetHeight;
+    fromH.current = dw.current!.offsetHeight;
     setOpen(id);
   }
   function close() {
-    const el = dw.current;
+    const el = dw.current!;
     gsap.killTweensOf(el);
     if (reduced()) {
       gsap.set(el, { height: 0 });
@@ -309,7 +309,8 @@ export default function Shop() {
     if (reduced()) {
       o.mo = t.mo;
       o.once = t.once;
-      return draw();
+      draw();
+      return;
     }
     draw();
     const tw = gsap.to(o, {
@@ -319,7 +320,9 @@ export default function Shop() {
       ease: "power2.out",
       onUpdate: draw,
     });
-    return () => tw.kill();
+    return () => {
+      tw.kill();
+    };
   }, [t.mo, t.once]);
 
   const cur = services.find((s) => s.id === open);
