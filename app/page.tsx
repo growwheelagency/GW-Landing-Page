@@ -5,6 +5,7 @@ import Promises from "../components/Promises";
 import Problem from "../components/Problem";
 import System from "../components/System";
 import Shop from "../components/Shop";
+import Testimonials from "../components/Testimonials";
 import Process from "../components/Process";
 import Founders from "../components/Founders";
 import Faq from "../components/Faq";
@@ -21,6 +22,7 @@ export default function Page() {
         <Promises />
         <Problem />
         <System />
+        <Testimonials />
         <Process />
         <Founders />
         <Shop />

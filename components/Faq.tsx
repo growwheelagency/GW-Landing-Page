@@ -25,7 +25,7 @@ const faqs = [
   ],
   [
     "How do you charge?",
-    "After the audit we quote based on what you actually need, either a monthly retainer or a fixed project price. No surprise fees.",
+    "Pick a plan in our pricing section, add or remove services and pay monthly, with one-time charges only for setup work like websites. Not sure what you need? Start with the free audit.",
   ],
   [
     "Which businesses do you work with?",

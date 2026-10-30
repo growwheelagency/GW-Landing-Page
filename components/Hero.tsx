@@ -214,7 +214,8 @@ export default function Hero() {
               >
                 {w}
               </span>
-              {i === 2 ? <span className="brk" /> : " "}
+              {" "}
+              {i === 2 && <span className="brk" />}
             </span>
           ))}
           <span className="sp" aria-hidden="true">

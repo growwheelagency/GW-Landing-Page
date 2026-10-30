@@ -1,5 +1,5 @@
 import { site } from "../../../lib/site";
-import { inr } from "../../../lib/shop";
+import { usd } from "../../../lib/shop";
 import type { Billing } from "../../../lib/shop";
 
 type Lead = {
@@ -9,6 +9,8 @@ type Lead = {
   website?: string;
   message?: string;
   needs?: string[];
+  plan?: string; // set by the onboarding flow
+  business?: string;
   bucket?: { service: string; item: string; price: number; billing: Billing }[];
   totals?: { mo: number; once: number };
 };
@@ -16,21 +18,22 @@ type Lead = {
 // Plain text keeps whatever a visitor typed from being rendered as HTML.
 function body(d: Lead) {
   const lines = [
+    ...(d.plan ? [`Plan: ${d.plan}`, `Business: ${d.business || "Not given"}`] : []),
     `Name: ${d.name}`,
     `Email: ${d.email}`,
     `Phone/WhatsApp: ${d.phone || "Not given"}`,
     `Website: ${d.website || "Not given"}`,
-    `Needs: ${d.needs?.length ? d.needs.join(", ") : "Not given"}`,
+    `${d.plan ? "Main goal" : "Needs"}: ${d.needs?.length ? d.needs.join(", ") : "Not given"}`,
   ];
   if (d.bucket?.length) {
-    lines.push("", `Bucket (${d.bucket.length}):`);
+    lines.push("", `Selected services (${d.bucket.length}):`);
     d.bucket.forEach((p) =>
       lines.push(
-        `- ${p.service}: ${p.item}, ${inr(p.price)}${p.billing === "mo" ? "/mo" : " one-time"}`,
+        `- ${p.service}: ${p.item}, ${usd(p.price)}${p.billing === "mo" ? "/mo" : " one-time"}`,
       ),
     );
     if (d.totals)
-      lines.push(`Total: ${inr(d.totals.mo)}/mo + ${inr(d.totals.once)} one-time`);
+      lines.push(`Total: ${usd(d.totals.mo)}/mo + ${usd(d.totals.once)} one-time${d.plan ? " (after plan discount)" : ""}`);
   }
   if (d.message) lines.push("", "Message:", d.message);
   return lines.join("\n");
@@ -49,7 +52,7 @@ async function sendLead(d: Lead) {
       from: `${site.name} Leads <onboarding@resend.dev>`,
       to: [site.email],
       reply_to: d.email,
-      subject: `New lead: ${d.name}${d.bucket?.length ? ` (${d.bucket.length} piece bucket)` : ""}`,
+      subject: d.plan ? `New order: ${d.name} (${d.plan})` : `New lead: ${d.name}`,
       text: body(d),
     }),
   });
@@ -67,8 +70,8 @@ async function saveAudit(d: Lead) {
       email: d.email,
       phone: d.phone,
       website: d.website,
-      needs: d.needs?.join(", "),
-      message: d.message,
+      needs: d.plan ? `${d.plan} plan: ${d.bucket?.map((p) => p.item).join(", ")}` : d.needs?.join(", "),
+      message: d.plan ? [d.business, ...(d.needs ?? []), d.message].filter(Boolean).join(" | ") : d.message,
     }),
   });
   // Apps Script answers 200 with a login page when access is set wrong.

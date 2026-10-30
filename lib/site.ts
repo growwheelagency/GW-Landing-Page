@@ -6,6 +6,14 @@ export type Member = {
   tags: string[];
 };
 
+export type Testimonial = {
+  name: string;
+  business: string;
+  quote: string;
+  photo: string | null;
+  link?: string;
+};
+
 // Edit this file: everything on the page that is "yours" lives here.
 export const site = {
   name: "GrowWheel",
@@ -38,4 +46,7 @@ export const site = {
       tags: ["Web & SaaS", "UI/UX", "Design"],
     },
   ],
+  // Real clients only, with their permission. The section stays hidden while this is empty.
+  // { name: "", business: "", quote: "", photo: "/testimonials/name.jpg", link: "https://..." }
+  testimonials: <Testimonial[]>[],
 };

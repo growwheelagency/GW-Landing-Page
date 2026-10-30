@@ -4,8 +4,6 @@ import type { FormEvent } from "react";
 import Reveal from "./Reveal";
 import { Tick } from "./Icons";
 import { site } from "../lib/site";
-import { useBucket } from "../lib/bucket";
-import { pieces, totals, inr } from "../lib/shop";
 import Eyebrow from "./Eyebrow";
 
 const needs = [
@@ -20,8 +18,6 @@ export default function Contact() {
   const [needsPicked, setNeedsPicked] = useState<string[]>([]);
   const [state, setState] = useState<"idle" | "sending" | "done" | "error">("idle");
   const [err, setErr] = useState("");
-  const picked = useBucket();
-  const tot = totals(picked);
   const toggle = (n: string) =>
     setNeedsPicked((p) => (p.includes(n) ? p.filter((x) => x !== n) : [...p, n]));
 
@@ -41,11 +37,6 @@ export default function Contact() {
           website: f.get("website"),
           message: f.get("message"),
           needs: needsPicked,
-          bucket: picked.map((id) => {
-            const p = pieces[id];
-            return { service: p.svc.t, item: p.name, price: p.price, billing: p.b };
-          }),
-          totals: tot,
         }),
       });
       const j = await res.json();
@@ -106,26 +97,6 @@ export default function Contact() {
               </div>
             ) : (
               <form className="fm2" onSubmit={submit} noValidate={false}>
-                {picked.length > 0 && (
-                  <div className="bk-sum">
-                    <div className="bk-h">
-                      <span>
-                        Your bucket · {picked.length} piece
-                        {picked.length > 1 ? "s" : ""}
-                      </span>
-                      <a href="#services">Edit</a>
-                    </div>
-                    <ul>
-                      {picked.slice(0, 4).map((id) => (
-                        <li key={id}>{pieces[id].name}</li>
-                      ))}
-                      {picked.length > 4 && <li>+ {picked.length - 4} more</li>}
-                    </ul>
-                    <span className="bk-t">
-                      {inr(tot.mo)}/mo + {inr(tot.once)} one-time
-                    </span>
-                  </div>
-                )}
                 <label>
                   Your name
                   <input
@@ -194,7 +165,7 @@ export default function Contact() {
                     "Sending…"
                   ) : (
                     <>
-                      {picked.length ? "Send my bucket" : "Get my free audit"}{" "}
+                      Get my free audit{" "}
                       <span className="arr" aria-hidden="true">
                         →
                       </span>

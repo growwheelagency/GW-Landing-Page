@@ -9,6 +9,9 @@ export function Sparkle({ className, style }: { className?: string; style?: CSSP
 export function Person({ size = 16, className }: IconProps) {
   return <svg className={className} width={size} height={size} viewBox="0 0 24 24" fill="#fff" fillOpacity=".92" aria-hidden="true"><circle cx="12" cy="8.5" r="4.6" /><path d="M2.5 24c0-5.6 4.2-9 9.5-9s9.5 3.4 9.5 9z" /></svg>;
 }
+export function Quote({ size = 22, className }: IconProps) {
+  return <svg className={className} width={size} height={size} viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M10 5C5.6 6.4 3 9.8 3 14v5h7v-7H6.6c.2-2 1.5-3.6 3.4-4.4zM21 5c-4.4 1.4-7 4.8-7 9v5h7v-7h-3.4c.2-2 1.5-3.6 3.4-4.4z" /></svg>;
+}
 export function Tick({ size = 14, className }: IconProps) {
   return <svg className={className} width={size} height={size} viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M2 6.4l2.6 2.6L10 3.4" /></svg>;
 }
